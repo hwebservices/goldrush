@@ -20,14 +20,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
   await Flame.device.setLandscape();
-  
-  runApp(
-    GameWidget(game: goldRush)
-  );
+
+  runApp(GameWidget(game: goldRush));
 }
 
-class GoldRush extends FlameGame with HasCollidables, HasDraggables, HasTappables {
-
+class GoldRush extends FlameGame
+    with HasCollidables, HasDraggables, HasTappables {
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -37,8 +35,12 @@ class GoldRush extends FlameGame with HasCollidables, HasDraggables, HasTappable
     await FlameAudio.bgm.play('music/music.mp3', volume: 0.1);
 
     var hud = HudComponent();
-    var george = George(hud: hud, position: Vector2(200, 400), size: Vector2(48.0, 48.0), speed: 40.0);
-    add (george);
+    var george = George(
+        hud: hud,
+        position: Vector2(200, 400),
+        size: Vector2(48.0, 48.0),
+        speed: 40.0);
+    add(george);
 
     add(Background(george));
 
@@ -50,9 +52,15 @@ class GoldRush extends FlameGame with HasCollidables, HasDraggables, HasTappable
     final enemies = tiledMap.tileMap.getObjectGroupFromLayer('Enemies');
     enemies.objects.asMap().forEach((index, position) {
       if (index % 2 == 0) {
-        add(Skeleton(position: Vector2(position.x, position.y), size: Vector2(32.0, 64.0), speed: 60.0));
+        add(Skeleton(
+            position: Vector2(position.x, position.y),
+            size: Vector2(32.0, 64.0),
+            speed: 60.0));
       } else {
-        add (Zombie(position: Vector2(position.x, position.y), size: Vector2(32.0, 64.0), speed: 20.0));
+        add(Zombie(
+            position: Vector2(position.x, position.y),
+            size: Vector2(32.0, 64.0),
+            speed: 20.0));
       }
     });
 
@@ -68,13 +76,17 @@ class GoldRush extends FlameGame with HasCollidables, HasDraggables, HasTappable
 
     final water = tiledMap.tileMap.getObjectGroupFromLayer('Water');
     water.objects.forEach((rect) {
-      add(Water(position: Vector2(rect.x, rect.y), size: Vector2(rect.width, rect.height), id: rect.id));
+      add(Water(
+          position: Vector2(rect.x, rect.y),
+          size: Vector2(rect.width, rect.height),
+          id: rect.id));
     });
 
     camera.speed = 1;
-    camera.followComponent(george, worldBounds: Rect.fromLTWH(0, 0, 1600, 1600));
+    camera.followComponent(george,
+        worldBounds: Rect.fromLTWH(0, 0, 1600, 1600));
   }
-  
+
   @override
   void onRemove() {
     FlameAudio.bgm.stop();
@@ -85,16 +97,16 @@ class GoldRush extends FlameGame with HasCollidables, HasDraggables, HasTappable
 
   @override
   void lifecycleStateChange(AppLifecycleState state) {
-    switch(state) {
+    switch (state) {
       case AppLifecycleState.paused:
-        children.forEach((component) { 
+        children.forEach((component) {
           if (component is Character) {
             component.onPaused();
           }
         });
         break;
       case AppLifecycleState.resumed:
-        children.forEach((component) { 
+        children.forEach((component) {
           if (component is Character) {
             component.onResumed();
           }
